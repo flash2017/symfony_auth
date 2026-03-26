@@ -7,6 +7,11 @@ use App\Domain\User\Entity\User;
 
 class UserOutPutDTOFactory
 {
+    /**
+     * @param User $user
+     * @param string $jwtToken
+     * @return UserOutpuDTO
+     */
     public function makeRegistrationOutPutDTO(User $user, string $jwtToken): UserOutpuDTO
     {
         $registrationUSerDTO = new UserOutpuDTO();
@@ -14,6 +19,21 @@ class UserOutPutDTOFactory
         $registrationUSerDTO->id = $user->getId();
         $registrationUSerDTO->email = $user->getEmail();
         $registrationUSerDTO->jwtToken = $jwtToken;
+        $registrationUSerDTO->roles = $user->getRoles();
+
+        return $registrationUSerDTO;
+    }
+
+    /**
+     * @param User $user
+     * @return UserOutpuDTO
+     */
+    public function makeMeOutPutDTO(User $user): UserOutpuDTO
+    {
+        $registrationUSerDTO = new UserOutpuDTO();
+
+        $registrationUSerDTO->id = $user->getId();
+        $registrationUSerDTO->email = $user->getEmail();
         $registrationUSerDTO->roles = $user->getRoles();
 
         return $registrationUSerDTO;

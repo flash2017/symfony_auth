@@ -6,10 +6,8 @@ use App\Application\DTO\Input\RegistrationUserDTO;
 use App\Application\DTO\OutputDTO\UserOutpuDTO;
 use App\Application\Factory\UserFactory;
 use App\Application\Factory\UserOutPutDTOFactory;
-use App\Domain\User\Entity\User;
 use App\Domain\User\Repository\UserRepositoryInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationUserUseCase
@@ -35,8 +33,6 @@ class RegistrationUserUseCase
 
         $user = $this->userRepository->store($user);
 
-        $userOutputDTO = $this->userOutPutDTOFactory->makeRegistrationOutPutDTO($user, $this->jwtManager->create($user));
-
-        return $userOutputDTO;
+        return $this->userOutPutDTOFactory->makeRegistrationOutPutDTO($user, $this->jwtManager->create($user));
     }
 }

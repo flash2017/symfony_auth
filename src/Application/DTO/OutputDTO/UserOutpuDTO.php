@@ -8,15 +8,15 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 class UserOutpuDTO
 {
-    #[Groups('user:registry')]
+    #[Groups(['user:registry', 'user:me'])]
     public ?int $id = null;
 
-    #[Groups('user:registry')]
+    #[Groups(['user:registry', 'user:me'])]
     public ?string $email = null;
     #[Groups('user:registry')]
     public ?string $jwtToken = null;
 
-    #[Groups('user:registry')]
+    #[Groups(['user:registry', 'user:me'])]
     public ?array $roles = null;
     #[Groups('user:registry')]
     public ?string $userIdentifier = null;
