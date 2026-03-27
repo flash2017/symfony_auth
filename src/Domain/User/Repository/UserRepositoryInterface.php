@@ -17,6 +17,7 @@ interface UserRepositoryInterface
 
     /**
      * @param User $user
+     * @param bool $isFlush
      * @return User
      */
     public function store(User $user, bool $isFlush = true): User;
