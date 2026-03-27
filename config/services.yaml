@@ -34,6 +34,38 @@ services:
     App\Domain\User\Repository\UserRepositoryInterface: '@App\Infrastructure\Persistence\Doctrine\UserRepository'
     App\Domain\Auth\Port\PasswordHasherInterface: '@App\Infrastructure\Security\SymfonyPasswordHasher'
 
+    # 1. Стандартный процессор для интерполяции сообщения ({id} -> 123)
+    Monolog\Processor\PsrLogMessageProcessor:
+        tags:
+             - { name: monolog.processor, handler: api_json }
+
+    #2. Стандартный процессор для данных запроса (URI, IP, Method)
+    Monolog\Processor\WebProcessor:
+        tags:
+            - { name: monolog.processor, handler: api_json }
+
+    # 3. Мой кастомный процессор для статуса ответа
+    App\Infrastructure\Logger\Monolog\Processor\ApiResponseProcessor:
+        arguments:
+            - '@request_stack'
+        tags:
+            # Регистрируем как процессор логов
+            - { name: monolog.processor, handler: api_json }
+            # Регистрируем как слушатель события (указываем метод)
+            - { name: kernel.event_listener, event: kernel.terminate, method: terminate }
+
+    App\Infrastructure\EventListener\OnRequestListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+        calls:
+            - [ setLogger, [ '@monolog.logger.api' ] ]
+
+    App\Infrastructure\EventListener\OnResponseListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response }
+        calls:
+            - [ setLogger, [ '@monolog.logger.api' ] ]
+
     # Параметры для JWT
     #App\Infrastructure\Security\LcobucciJwtProvider:
      #   arguments:
